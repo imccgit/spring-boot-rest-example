@@ -7,7 +7,7 @@ node {
         }
 
         stage('Test') {
-            sh 'mvn clean install -DargLine="-agentpath:Users/ianmccallum/dynatrace-7.0/agent/lib64/libdtagent.dylib=name=Jenkins_Agent,server=localhost:9998,optionTestRunIdJava=%dtTestrunID%"'
+            sh 'mvn clean install -DargLine="-agentpath:/Users/ianmccallum/dynatrace-7.0/agent/lib64/libdtagent.dylib=name=Jenkins_Agent,server=localhost:9998,optionTestRunIdJava=%dtTestrunID%"'
 
             def pom = readMavenPom file:'pom.xml'
             print pom.version
