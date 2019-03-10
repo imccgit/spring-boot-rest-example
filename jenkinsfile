@@ -6,8 +6,8 @@ node {
             git url: 'https://github.com/imccgit/spring-boot-rest-example.git', branch: 'master'
         }
 
-        stage('Build') {
-            sh 'mvn clean install'
+        stage('Test') {
+            sh 'mvn clean test -DargLine="-agentpath:Users/ianmccallum/dynatrace-7.0/agent/lib64/libdtagent.dylib=name=Jenkins_Agent,server=localhost:9998,optionTestRunIdJava=%dtTestrunID%"'
 
             def pom = readMavenPom file:'pom.xml'
             print pom.version
