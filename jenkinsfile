@@ -12,7 +12,7 @@ node {
         }
         
         stage('Session Recording'){
-        	startSession dynatraceProfile: 'Jenkins @ appmon_local', testCase: 'workflowTest'
+        	startSession dynatraceProfile: 'Jenkins (admin) @ appmon_local', testCase: 'loadTest'
         }
 
         stage('Test') {
@@ -24,7 +24,7 @@ node {
         }
         
         stage('StopSessionRecording') {
-        	stopSession 'Jenkins @ appmon_local'
+        	stopSession 'Jenkins (admin) @ appmon_local'
     	}
 
     }
