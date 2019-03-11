@@ -4,7 +4,7 @@ node {
     
     	maven:'maven',
     	jdk: 'default_jdk'
-    
+   
     	) {
 
         stage('Checkout') {
@@ -28,7 +28,7 @@ node {
     	}
     	
     	stage('getReports') {
-        	perfSigReports configurationTestCases: [[$class: 'UnitTestCase', clientDashboard: 'LoadTest Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: false, removeConfidentialStrings: true
+        	perfSigReports configurationTestCases: [[$class: 'UnitTestCase', clientDashboard: 'HotelsUnitTest Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: false, removeConfidentialStrings: true
         	// perfSigReports configurationTestCases: [[$class: 'UnitTestCase', clientDashboard: 'HotelsUnitTest Overview', comparisonDashboards: [[dashboard: 'PerformanceSignature_comparisonreport']], name: 'HotelsUnitTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
         }
 
