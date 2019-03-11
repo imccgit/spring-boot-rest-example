@@ -28,8 +28,8 @@ node {
     	}
     	
     	stage('getReports') {
-        	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'open Webstart client', comparisonDashboards: [[dashboard: 'PerformanceSignature_comparisonreport']], name: 'loadTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true
-    	}
+        	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'LoadTest Overview', comparisonDashboards: [[dashboard: 'PerformanceSignature_comparisonreport']], name: 'loadTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, nonFunctionalFailure: 2, removeConfidentialStrings: true
+       	}
 
     }
 
