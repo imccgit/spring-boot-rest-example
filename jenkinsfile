@@ -27,11 +27,13 @@ node {
         	stopSession 'Jenkins (admin) @ appmon_local'
     	}
     	
+    	stage('Deploy'){
+    		sh './target/*.war /usr/local/Cellar/tomcat/9.0.16/libexec/webapps'
+    	}
+    	
     	stage('getReports') {
         	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'PurePath Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
-        	//perfSigReports configurationTestCases: [[$class: 'UnitTestCase', clientDashboard: 'HotelsUnitTest Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: false, removeConfidentialStrings: true
-        	// perfSigReports configurationTestCases: [[$class: 'UnitTestCase', clientDashboard: 'HotelsUnitTest Overview', comparisonDashboards: [[dashboard: 'PerformanceSignature_comparisonreport']], name: 'HotelsUnitTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
-        }
+           }
 
     }
 
