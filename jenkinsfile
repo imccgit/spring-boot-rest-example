@@ -26,6 +26,10 @@ node {
         stage('StopSessionRecording') {
         	stopSession 'Jenkins (admin) @ appmon_local'
     	}
+    	
+    	stage('getReports') {
+        	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'open Webstart client', comparisonDashboards: [[dashboard: 'PerformanceSignature_comparisonreport']], name: 'loadTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true
+    	}
 
     }
 
