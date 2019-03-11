@@ -12,7 +12,7 @@ node {
         }
         
         stage('Session Recording'){
-        	startSession dynatraceProfile: 'Jenkins (admin) @ appmon_local', testCase: 'loadTest'
+        	startSession dynatraceProfile: 'Jenkins (admin) @ appmon_local', testCase: 'HotelsUnitTest'
         }
 
         stage('Test') {
@@ -28,8 +28,8 @@ node {
     	}
     	
     	stage('getReports') {
-        	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'LoadTest Overview', comparisonDashboards: [[dashboard: 'PerformanceSignature_comparisonreport']], name: 'loadTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, nonFunctionalFailure: 2, removeConfidentialStrings: true
-       	}
+        	perfSigReports configurationTestCases: [[$class: 'UnitTestCase', clientDashboard: 'HotelsUnitTest Overview', comparisonDashboards: [[dashboard: 'PerformanceSignature_comparisonreport']], name: 'HotelsUnitTest', singleDashboards: [[dashboard: 'PerformanceSignature_singlereport']], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
+        }
 
     }
 
