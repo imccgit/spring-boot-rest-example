@@ -15,7 +15,7 @@ node {
         	startSession dynatraceProfile: 'Jenkins (admin) @ appmon_local', testCase: 'HotelsUnitTest'
         }
 
-        stage('Test') {
+        stage('Build') {
             sh 'mvn clean install -DargLine="-agentpath:/Users/ianmccallum/dynatrace-7.0/agent/lib64/libdtagent.dylib=name=Jenkins_Agent,server=localhost:9998,optionTestRunIdJava=%dtTestrunID%"'
 
             def pom = readMavenPom file:'pom.xml'
@@ -30,10 +30,6 @@ node {
     	stage('Deploy'){
     		sh 'java -jar -Dspring.profiles.active=test target/spring-boot-rest-example-0.5.0.war &'
     		sleep 60
-    	}
-    	
-    	stage('Healthcheck URL'){
-    		sh 'curl http://localhost:8091/health'
     	}
     	
     	stage('getReports') {
