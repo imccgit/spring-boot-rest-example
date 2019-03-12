@@ -32,6 +32,10 @@ node {
     		sleep 60
     	}
     	
+    	stage('Healthcheck URL'){
+    		sh 'curl http://localhost:8091/health'
+    	}
+    	
     	stage('getReports') {
         	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'PurePath Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
            }
