@@ -1,0 +1,48 @@
+node {
+
+    withMaven(
+    
+    	maven:'maven',
+    	jdk: 'default_jdk'
+   
+    	) {
+
+        stage('Checkout') {
+            git url: 'https://github.com/imccgit/spring-boot-rest-example.git', branch: 'master'
+        }
+        
+        stage('Session Recording'){
+        	startSession dynatraceProfile: 'Jenkins (admin) @ appmon_local', testCase: 'HotelsUnitTest'
+        }
+
+        stage('Build') {
+            sh 'mvn clean install -DargLine="-agentpath:/Users/ianmccallum/dynatrace-7.0/agent/lib64/libdtagent.dylib=name=Jenkins_Agent,server=localhost:9998,optionTestRunIdJava=%dtTestrunID%"'
+
+            def pom = readMavenPom file:'pom.xml'
+            print pom.version
+            env.version = pom.version
+        }
+    	
+    	stage('Deploy'){
+    		sh 'java -jar -Dspring.profiles.active=test target/spring-boot-rest-example-0.5.0.war &'
+    		sleep 60
+    	}
+    	
+    	stage('Healthcheck URL'){
+    		sh 'curl --header "Content-Type: application/json" \
+  --request POST \
+  --data '{"username":"xyz","password":"xyz"}' \
+  http://localhost:3000/api/login'
+    	}
+    	
+    	stage('StopSessionRecording') {
+        	stopSession 'Jenkins (admin) @ appmon_local'
+    	}
+    	
+    	stage('getReports') {
+        	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'PurePath Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
+           }
+
+    }
+
+}
