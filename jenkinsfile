@@ -11,9 +11,6 @@ node {
             git url: 'https://github.com/imccgit/spring-boot-rest-example.git', branch: 'master'
         }
         
-        stage('Session Recording'){
-        	startSession dynatraceProfile: 'Jenkins (admin) @ appmon_local', testCase: 'HotelsUnitTest'
-        }
 
         stage('Build') {
             sh 'mvn clean install -DargLine="-agentpath:/Users/ianmccallum/dynatrace-7.0/agent/lib64/libdtagent.dylib=name=Jenkins_Agent,server=localhost:9998,optionTestRunIdJava=%dtTestrunID%"'
@@ -23,22 +20,18 @@ node {
             env.version = pom.version
         }
         
-        stage('StopSessionRecording') {
-        	stopSession 'Jenkins (admin) @ appmon_local'
-    	}
+        withCredentials([sshUserPrivateKey(credentialsId: "ec2-user (EC2 Staging Env)", keyFileVariable: 'keyfile')]) {
+        stage('scp-f/b') {
+	        sh "scp -i ${keyfile} do sth here"
+	       }
+   		}
     	
     	stage('Deploy'){
+    		sh 'scp -v -o StrictHostKeyChecking=no  -i /var/lib/jenkins/secrets/mykey target/*.jar ubuntu@00.00.00.00:/home/ubuntu'
+            sh "sshpass -p password ssh -o StrictHostKeyChecking=no -i /var/lib/jenkins/secrets/mykey ubuntu@00.00.00.00 '/home/ubuntu/start.sh'"
     		sh 'java -jar -Dspring.profiles.active=test target/spring-boot-rest-example-0.5.0.war &'
     		sleep 60
     	}
-    	
-    	stage('Healthcheck URL'){
-    		sh 'curl http://localhost:8091/health'
-    	}
-    	
-    	stage('getReports') {
-        	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'PurePath Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
-           }
 
     }
 

@@ -1,3 +1,10 @@
+// Define a remote for SSHs
+def remote = [:]
+remote.name = "staging"
+remote.host = "ec2-34-220-2-142.us-west-2.compute.amazonaws.com"
+remote.allowAnyHosts = true
+
+
 node {
 
     withMaven(
@@ -10,39 +17,23 @@ node {
         stage('Checkout') {
             git url: 'https://github.com/imccgit/spring-boot-rest-example.git', branch: 'master'
         }
-        
-        stage('Session Recording'){
-        	startSession dynatraceProfile: 'Jenkins (admin) @ appmon_local', testCase: 'HotelsUnitTest'
-        }
 
         stage('Build') {
-            sh 'mvn clean install -DargLine="-agentpath:/Users/ianmccallum/dynatrace-7.0/agent/lib64/libdtagent.dylib=name=Jenkins_Agent,server=localhost:9998,optionTestRunIdJava=%dtTestrunID%"'
-
+            sh 'mvn clean install'
+            
             def pom = readMavenPom file:'pom.xml'
             print pom.version
             env.version = pom.version
         }
     	
-    	stage('Deploy'){
-    		sh 'java -jar -Dspring.profiles.active=test target/spring-boot-rest-example-0.5.0.war &'
-    		sleep 60
-    	}
-    	
-    	stage('Healthcheck URL'){
-    		sh 'curl --header "Content-Type: application/json" \
-  --request POST \
-  --data '{"username":"xyz","password":"xyz"}' \
-  http://localhost:3000/api/login'
-    	}
-    	
-    	stage('StopSessionRecording') {
-        	stopSession 'Jenkins (admin) @ appmon_local'
-    	}
-    	
-    	stage('getReports') {
-        	perfSigReports configurationTestCases: [[$class: 'GenericTestCase', clientDashboard: 'PurePath Overview', comparisonDashboards: [], name: 'HotelsUnitTest', singleDashboards: [], xmlDashboard: 'PerformanceSignature_xml']], dynatraceProfile: 'Jenkins (admin) @ appmon_local', exportSessions: true, removeConfidentialStrings: true
-           }
-
+	    withCredentials([sshUserPrivateKey(credentialsId: '7098b688-8eef-4da7-92b7-e5f9933e5337', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
+	    // Staging
+	    remote.user = userName
+	    remote.identityFile = identity
+	    stage("Staging") {
+	            sshCommand remote: remote, command: 'ps -ef'
+	        	sshPut remote: remote, from: 'test target/spring-boot-rest-example-0.5.0.war', into: '.'
+	        }
+	    }
     }
-
 }
