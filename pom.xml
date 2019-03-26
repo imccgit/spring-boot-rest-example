@@ -129,7 +129,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.khoubyari.example.application.main</mainClass>
+					<mainClass>com.khoubyari.example.application</mainClass>
 					<addResources>false</addResources>
 					<executable>true</executable>
 				</configuration>
