@@ -35,7 +35,7 @@ node {
 	    stage("Staging") {
 	        	sshPut remote: remote, from: 'target/spring-boot-rest-example-0.5.0.jar', into: '.'
 	        	sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
-	        	sshCommand remote: remote, command: 'nohup java -jar spring-boot-rest-example-0.5.0.jar < /dev/null >> logfile.log 2>&1 &'
+	        	sshCommand remote: remote, command: 'JENKINS_NODE_COOKIE=dontKillMe nohup java -jar spring-boot-rest-example-0.5.0.jar < /dev/null >> logfile.log 2>&1 &'
 	        	
 	        }
 	    }
