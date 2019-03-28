@@ -37,7 +37,7 @@ node {
 	        	//sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
 	        	//sshCommand remote: remote, command: 'sudo ln -s spring-boot-rest-example-0.5.0.jar /etc/init.d/spring-boot-rest-example-0.5.0'
 	        	withEnv(['JENKINS_NODE_COOKIE=dontKillMe']) {
-                    sshCommand remote: remote, command:  'setsid java -jar spring-boot-rest-example-0.5.0.jar &'
+                    sshCommand remote: remote, command:  'setsid nohup java -jar spring-boot-rest-example-0.5.0.jar &'
                     //sh 'nohup java -jar target/spring-boot-rest-example-0.5.0.jar &'
                 }
 	        }
