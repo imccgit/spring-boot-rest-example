@@ -38,9 +38,9 @@ node {
     	}
 	    
 	    stage("Staging") {
-	        	sshPut remote: remote, from: 'target/spring-boot-rest-example-0.5.0.jar', into: '.'
-	        	sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
-	        	sshCommand remote: remote, command: 'printenv'
+	        	//sshPut remote: remote, from: 'target/spring-boot-rest-example-0.5.0.jar', into: '.'
+	        	//sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
+	        	sshCommand remote: remote, command: 'export JENKINS_NODE_COOKIE;printenv'
 	        	sshCommand remote: remote, command: 'nohup java -jar spring-boot-rest-example-0.5.0.jar &'
 	        }
 	    }
