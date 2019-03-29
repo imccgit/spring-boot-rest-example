@@ -1,7 +1,8 @@
 // Define a remote for SSHs
 def remote = [:]
 remote.name = "staging"
-remote.host = "ec2-34-220-2-142.us-west-2.compute.amazonaws.com"
+// ubuntu
+remote.host = "ec2-34-217-57-44.us-west-2.compute.amazonaws.com"
 remote.allowAnyHosts = true
 
 
@@ -33,10 +34,10 @@ node {
 	    remote.identityFile = identity
 	    
 	    stage("Staging") {
-	        	//sshPut remote: remote, from: 'target/spring-boot-rest-example-0.5.0.jar', into: '.'
-	        	//sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
+	        	sshPut remote: remote, from: 'target/spring-boot-rest-example-0.5.0.jar', into: '.'
+	        	sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
 	        	sshCommand remote: remote, command: 'export JENKINS_NODE_COOKIE=dontKillMe '
-	        	sshCommand remote: remote, command: './start.sh > log.txt'
+	        	sshCommand remote: remote, command: 'java -jar spring-boot-rest-example-0.5.0.jar &'
 	        }
 	    }
     }
