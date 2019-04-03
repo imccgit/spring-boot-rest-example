@@ -29,19 +29,25 @@ node {
         }
     	
 	    withCredentials([sshUserPrivateKey(credentialsId: '7098b688-8eef-4da7-92b7-e5f9933e5337', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
-	    // Staging
-	    remote.user = userName
-	    remote.identityFile = identity
-	    
-	    environment {
-        	JENKINS_NODE_COOKIE = 'dontKillMe'
-    	}
-	    
-	    stage("Staging") {
-	        	sshPut remote: remote, from: 'target/spring-boot-rest-example-0.5.0.jar', into: '.'
-	        	sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
-	        	sshScript remote: remote, script: "start.sh spring-boot-rest-example-0.5.0.jar"
-	        }
-	    }
+		    // Staging
+		    remote.user = userName
+		    remote.identityFile = identity
+		    
+		    environment {
+	        	JENKINS_NODE_COOKIE = 'dontKillMe'
+	    	}
+		    
+		    stage("Staging") {
+		        	sshCommand remote: remote, command: 'chmod 700 spring-boot-rest-example-0.5.0.jar'
+		        	sshScript remote: remote, script: "start.sh spring-boot-rest-example-0.5.0.jar"
+		        	withEnv(["JENKINS_NODE_COOKIE=dontKillMe"]){
+		        		sshRemove remote: remote, path: 'spring-boot-rest-example-0.5.0.jar'
+		        		sshRemove remote: remote, path: 'startup.log'
+		        		sshPut remote: remote, from: 'target/spring-boot-rest-example-0.5.0.jar', into: '.'
+	            		sshCommand remote: remote, command: 'java -jar "spring-boot-rest-example-0.5.0.jar" > startup.log &'
+	            	}
+	        	}
+		    }
+		}
     }
 }
