@@ -28,7 +28,7 @@ node {
             env.version = pom.version
         }
     	
-	    withCredentials([sshUserPrivateKey(credentialsId: '7098b688-8eef-4da7-92b7-e5f9933e5337', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
+	    withCredentials([sshUserPrivateKey(credentialsId: '746d249c-c13d-4ed6-bd40-f3f8b268b13b', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
 		    // Staging
 		    remote.user = userName
 		    remote.identityFile = identity
