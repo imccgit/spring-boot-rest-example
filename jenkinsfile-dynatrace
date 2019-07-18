@@ -35,7 +35,6 @@ node {
                     junit 'target/surefire-reports/*.xml'
                 }
             }
-        }
 
 	    withCredentials([sshUserPrivateKey(credentialsId: 'aws_ubuntu_id', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
 		    // Staging
