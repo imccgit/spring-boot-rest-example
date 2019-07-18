@@ -28,10 +28,8 @@ node {
             env.version = pom.version
         }
 
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
+        stage('Test')
+            sh 'mvn test'
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
